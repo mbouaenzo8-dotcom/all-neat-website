@@ -1,0 +1,30 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "all-neat-dev",
+      "runtimeExecutable": "C:\\Users\\enzom\\all neat website\\dev.cmd",
+      "runtimeArgs": [],
+      "port": 5173,
+      "autoPort": true
+    },
+    {
+      "name": "all-neat-preview",
+      "runtimeExecutable": "C:\\Users\\enzom\\all neat website\\preview.cmd",
+      "runtimeArgs": [],
+      "port": 4173
+    },
+    {
+      "name": "hand-3d-demo",
+      "runtimeExecutable": "C:\\Program Files\\Python314\\python.exe",
+      "runtimeArgs": ["-m", "http.server", "5178", "--directory", "hand-3d-demo"],
+      "port": 5178
+    },
+    {
+      "name": "remix-vision-pro-3d",
+      "runtimeExecutable": "C:\\Users\\enzom\\all neat website\\remix-vision-pro-3d\\dev.cmd",
+      "runtimeArgs": [],
+      "port": 3000
+    }
+  ]
+}

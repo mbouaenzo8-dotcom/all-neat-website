@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+/*
+ * Type system (self-hosted via Fontsource, imported in main.tsx):
+ *   Display  -> Bricolage Grotesque (a warm contemporary grotesque)
+ *   Text/UI  -> Geist (clean, neutral, highly legible)
+ * No Google Fonts <link>; fonts are bundled for stable performance.
+ */
+@theme {
+  --font-display: "Bricolage Grotesque Variable", "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Ink / neutrals */
+  --color-navy-50: #eef2f6;
+  --color-navy-100: #d6e0ea;
+  --color-navy-200: #adc1d5;
+  --color-navy-300: #7f9ab2;
+  --color-navy-400: #526d89;
+  --color-navy-500: #35547a;
+  --color-navy-600: #1f3b58;
+  --color-navy-700: #17293e;
+  --color-navy-800: #101d2c;
+  --color-navy-900: #0a141f;
+
+  /* Single locked accent: teal */
+  --color-teal-50: #e9f6f6;
+  --color-teal-100: #cbe9e9;
+  --color-teal-200: #9bd4d6;
+  --color-teal-300: #6fb8bb;
+  --color-teal-400: #349499;
+  --color-teal-500: #0f7d84;
+  --color-teal-600: #0c666c;
+  --color-teal-700: #0a5257;
+  --color-teal-800: #083f43;
+
+  /* Warm surfaces */
+  --color-sand-50: #fbfaf6;
+  --color-sand-100: #f4f1e9;
+  --color-mist-50: #f4f6f8;
+  --color-mist-100: #eaeef2;
+
+  /* Amber is reserved ONLY for star-rating glyphs (semantic), not as a UI accent */
+  --color-star-400: #e2a13a;
+  --color-star-500: #d38f21;
+
+  --shadow-soft: 0 1px 2px rgba(16, 29, 44, 0.05), 0 4px 12px rgba(16, 29, 44, 0.05);
+  --shadow-card: 0 6px 24px rgba(16, 29, 44, 0.09);
+  --shadow-lifted: 0 18px 48px rgba(16, 29, 44, 0.16);
+  --shadow-ring: 0 0 0 1px rgba(16, 29, 44, 0.06);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-sand-50);
+    color: var(--color-navy-800);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    font-optical-sizing: auto;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-teal-500);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-teal-500);
+    color: #fff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .container-page {
+    width: 100%;
+    max-width: 82rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-page {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  .section-y {
+    padding-block: 4.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .section-y {
+      padding-block: 7rem;
+    }
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Scroll reveal: opacity + transform only (GPU-friendly). Toggled by useReveal(). */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .reveal[data-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+}
