@@ -7,6 +7,7 @@ on:
       - arena/01a10176-all-neat-website
     paths:
       - 'experiments/earth-hands/**'
+      - '.github/workflows/publish-earth-hands.yml'
 
 permissions:
   contents: read
