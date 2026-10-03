@@ -1,6 +1,7 @@
 name: Publier la démo Terre 3D
 # Publication isolée : seul le build de experiments/earth-hands est exposé.
 # Relancer après l'activation de Pages ou un changement de visibilité du dépôt.
+# La source GitHub Actions est maintenant activée dans les réglages du dépôt.
 
 on:
   workflow_dispatch:
