@@ -60,7 +60,9 @@ jobs:
       pages: write
       id-token: write
     environment:
-      name: github-pages
+      # L'environnement Pages créé par GitHub est verrouillé sur `main`.
+      # Cette démo est publiée depuis la branche Arena dédiée, avec son propre environnement.
+      name: earth-hands-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Déployer la démo
