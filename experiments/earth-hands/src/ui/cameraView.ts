@@ -40,7 +40,8 @@ export class CameraView {
 
     this.element = document.createElement('div')
     this.element.className = 'camera-widget'
-    this.element.dataset.visible = 'true'
+    // Le widget reste discret tant que la caméra n'est pas active.
+    this.element.dataset.visible = 'false'
 
     const view = document.createElement('div')
     view.className = 'camera-view'
@@ -81,6 +82,7 @@ export class CameraView {
   /** Branche un flux vidéo (déjà autorisé) sur le widget. */
   async attach(stream: MediaStream): Promise<void> {
     this.stream = stream
+    this.element.dataset.visible = 'true'
     this.video.srcObject = stream
     this.offMessage.hidden = true
     this.video.hidden = false
