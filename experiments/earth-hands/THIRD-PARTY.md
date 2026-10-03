@@ -18,9 +18,9 @@ la licence Apache-2.0 de MediaPipe est indiquée dans son `package.json`
 ## Moteur de suivi embarqué (`public/hands/`)
 
 Copie du paquet npm `@mediapipe/hands` (Apache-2.0) : graphe `hands.binarypb`,
-runtime WebAssembly (`hands_solution_simd_wasm_bin.js` / `.wasm`),
-données du modèle (`hands_solution_packed_assets.data` + chargeur),
-et les définitions de types (`index.d.ts`).
+runtime WebAssembly SIMD et standard, modèles TFLite de main (`hand_landmark_full.tflite`
+et `hand_landmark_lite.tflite`), données du modèle de paume (`hands_solution_packed_assets.data`
++ chargeur), et définitions de types (`index.d.ts`).
 Ces fichiers sont chargés localement par la page, via `locateFile`.
 
 ## Cartes de la Terre (`public/textures/`)

@@ -16,7 +16,7 @@ npm run dev      # puis http://localhost:5199 (ou le port affiché)
 | ------------------ | ---------------------------------------------------------- |
 | `npm run dev`      | serveur de développement                                    |
 | `npm run build`    | vérification des types (`tsc -b`) puis build dans `dist/`   |
-| `npm test`         | 55 tests (gestes, astronomie, vols, interface, données)     |
+| `npm test`         | 56 tests (gestes, astronomie, vols, interface, données, assets) |
 | `npm run preview`  | sert le build de production                                 |
 
 ---
@@ -88,7 +88,7 @@ src/
   data/locations.ts    30 merveilles + 50 villes, recherche par mots-clés
 public/
   textures/            cartes NASA (jour, nuit, spéculaire, normales, nuages, Lune, ciel étoilé)
-  hands/               moteur MediaPipe Hands (wasm + graphe + modèle), servi en local
+  hands/               moteur MediaPipe Hands, modèles de main, graphe et wasm, servis en local
 ```
 
 Principes :
@@ -119,7 +119,7 @@ Principes :
 npm test
 ```
 
-55 tests, sans navigateur ni carte graphique (`node --test` + `jsdom`), couvrant :
+56 tests, sans navigateur ni carte graphique (`node --test` + `jsdom`), couvrant :
 
 - la géométrie des mains (pincement, ouverture, extension maximale, miroir) ;
 - la machine à états : prise, relâchement, poing, visée, clic, zoom à deux mains, grâce anti-scintillement ;
@@ -128,15 +128,17 @@ npm test
 - l'orientation du globe (le lieu visé passe exactement face caméra, déterminant +1 — pas de miroir) ;
 - les vols (arrivée au bon endroit, surélévation à mi-parcours, bornes de zoom) ;
 - l'interface dans un DOM simulé (chips, fiche, curseurs, étiquettes, viseur, squelette caméra) ;
-- les données de lieux (unicité, bornes géographiques, recherche sans accents).
+- les données de lieux (unicité, bornes géographiques, recherche sans accents) ;
+- la présence des modèles MediaPipe, du graphe et des deux variantes wasm.
 
 ## 6. Limites connues
 
 - **Caméra dans une iframe restreinte** : si l'aperçu en ligne bloque `getUserMedia`,
   l'application l'explique et propose d'ouvrir la page dans un onglet ; tout le reste
   (souris, clavier, recherche de lieux) continue de fonctionner.
-- **wasm SIMD requis** : `public/hands/` ne contient que la variante SIMD du moteur MediaPipe
-  (tous les navigateurs depuis 2021). La variante non-SIMD n'est pas embarquée (~6 Mo de plus).
+- **Premier chargement du suivi** : les modèles TFLite et les moteurs WebAssembly SIMD / standard
+  sont embarqués localement. Le téléchargement initial est donc plus lourd, puis les fichiers
+  restent en cache dans le navigateur.
 - **Pas de rendu hors écran** : la 3D n'est pas testable en Node (pas de carte graphique) ;
   les tests couvrent la logique, les données et le DOM.
 
