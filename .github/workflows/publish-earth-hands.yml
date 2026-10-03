@@ -1,4 +1,5 @@
 name: Publier la démo Terre 3D
+# Publication isolée : seul le build de experiments/earth-hands est exposé.
 
 on:
   workflow_dispatch:
