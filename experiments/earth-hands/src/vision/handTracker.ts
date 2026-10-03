@@ -6,6 +6,7 @@
    ========================================================================= */
 
 import { Hands } from '@mediapipe/hands'
+import { singleFlight } from './singleFlight.ts'
 import {
   handOpenness,
   handSpan,
@@ -74,6 +75,7 @@ export class HandTracker {
   private readonly hands: Hands
   private readonly options: Required<HandTrackerOptions>
   private status: TrackerStatus = 'idle'
+  private readonly initializeOnce: () => Promise<void>
   private readonly statusListeners = new Set<(s: TrackerStatus) => void>()
   private errorMessage: string | null = null
 
@@ -110,6 +112,16 @@ export class HandTracker {
     })
     this.hands.onResults((results) => {
       this.handleResults(results as MediaPipeResults)
+    })
+    this.initializeOnce = singleFlight(async () => {
+      try {
+        await this.hands.initialize()
+        this.setStatus('ready')
+      } catch (error) {
+        this.errorMessage = error instanceof Error ? error.message : String(error)
+        this.setStatus('error')
+        throw error
+      }
     })
   }
 
@@ -150,18 +162,13 @@ export class HandTracker {
     for (const listener of this.statusListeners) listener(status)
   }
 
-  /** Charge le modèle (facultatif : `send` déclenche le chargement au besoin). */
-  async initialize(): Promise<void> {
-    if (this.status === 'ready') return
-    this.setStatus('loading')
-    try {
-      await this.hands.initialize()
-      this.setStatus('ready')
-    } catch (error) {
-      this.errorMessage = error instanceof Error ? error.message : String(error)
-      this.setStatus('error')
-      throw error
-    }
+  /** Charge le modèle une seule fois, même si plusieurs appels arrivent ensemble. */
+  initialize(): Promise<void> {
+    if (this.status === 'ready') return Promise.resolve()
+    if (this.status === 'idle') this.setStatus('loading')
+    // MediaPipe Hands partage des fabriques WASM globales : deux initialize()
+    // simultanés peuvent se marcher dessus dans Module.arguments.
+    return this.initializeOnce()
   }
 
   /**
@@ -175,7 +182,14 @@ export class HandTracker {
     }
     if (video.readyState < 2 || video.videoWidth === 0) return
 
-    if (this.status === 'idle') this.setStatus('loading')
+    // Ne jamais laisser send() démarrer une seconde init pendant initialize().
+    // La première image est volontairement ignorée; les frames suivantes passent.
+    if (this.status === 'idle') {
+      void this.initialize().catch(() => undefined)
+      return
+    }
+    if (this.status !== 'ready') return
+
     this.busy = true
     const now = performance.now()
     this.hands

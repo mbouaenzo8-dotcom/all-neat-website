@@ -204,8 +204,9 @@ async function startCamera(): Promise<void> {
     const message = explainCameraError(error)
     hud.hideStatus()
     hud.hideOverlay()
-    hud.toast(message, 'error', 12000)
-    if (startButton) startButton.disabled = false
+    // L'échec du modèle est déjà signalé par onStatus; évite un second toast brut.
+    if (tracker.currentStatus !== 'error') hud.toast(message, 'error', 12000)
+    if (startButton) startButton.disabled = tracker.currentStatus === 'error'
   }
 }
 
@@ -535,7 +536,11 @@ loadEarthTextures({
 tracker.onStatus((status) => {
   hud.update({ trackerStatus: status })
   if (status === 'error' && tracker.error) {
-    hud.toast(`Suivi des mains indisponible : ${tracker.error}. Le reste de l'application fonctionne.`, 'error', 12000)
+    hud.toast(
+      `Suivi des mains indisponible : ${tracker.error}. Rechargez la page pour réessayer; le reste de l'application fonctionne.`,
+      'error',
+      12000,
+    )
   }
 })
 
