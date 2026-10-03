@@ -189,14 +189,15 @@ async function startCamera(): Promise<void> {
       video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 }, frameRate: { ideal: 30, max: 60 } },
       audio: false,
     })
-    cameraRunning = true
-    cameraStartedAt = performance.now()
-    noHandHintShown = false
     await camera.attach(cameraStream)
     hud.hideOverlay()
     hud.showStatus('Chargement du modèle de suivi des mains…')
 
+    // Le RAF ne doit pas appeler send() avant que MediaPipe ait fini initialize().
     await tracker.initialize()
+    cameraRunning = true
+    cameraStartedAt = performance.now()
+    noHandHintShown = false
     hud.hideStatus()
     hud.toast('Suivi actif : pincez pouce et index, puis déplacez la main pour faire tourner la Terre.')
   } catch (error) {
@@ -298,7 +299,7 @@ function frame(now: number): void {
   smoothedFps = smoothedFps * 0.92 + (1 / dt) * 0.08
 
   // Le suivi des mains démarre avant même que les cartes soient chargées.
-  if (cameraRunning && handsEnabled) tracker.send(camera.video)
+  if (cameraRunning && handsEnabled && tracker.currentStatus === 'ready') tracker.send(camera.video)
   const hands = tracker.getHands(now)
   const gesture = handsEnabled ? fsm.update(now, hands) : fsm.current
 
