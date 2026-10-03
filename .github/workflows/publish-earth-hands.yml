@@ -1,12 +1,12 @@
 name: Publier la démo Terre 3D
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - arena/01a10176-all-neat-website
     paths:
       - 'experiments/earth-hands/**'
-      - '.github/workflows/publish-earth-hands.yml'
 
 permissions:
   contents: read
