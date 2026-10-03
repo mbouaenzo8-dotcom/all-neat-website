@@ -86,6 +86,8 @@ let currentPlace: Place | null = null
 let currentView: ViewName = 'globe'
 let cameraStream: MediaStream | null = null
 let cameraRunning = false
+let cameraStartedAt = 0
+let noHandHintShown = false
 let targetFov: number = VIEWS.globe.fov
 let currentFov: number = VIEWS.globe.fov
 let lastSunUpdate = 0
@@ -188,6 +190,8 @@ async function startCamera(): Promise<void> {
       audio: false,
     })
     cameraRunning = true
+    cameraStartedAt = performance.now()
+    noHandHintShown = false
     await camera.attach(cameraStream)
     hud.hideOverlay()
     hud.showStatus('Chargement du modèle de suivi des mains…')
@@ -297,6 +301,18 @@ function frame(now: number): void {
   if (cameraRunning && handsEnabled) tracker.send(camera.video)
   const hands = tracker.getHands(now)
   const gesture = handsEnabled ? fsm.update(now, hands) : fsm.current
+
+  if (
+    cameraRunning &&
+    handsEnabled &&
+    tracker.currentStatus === 'ready' &&
+    hands.length === 0 &&
+    !noHandHintShown &&
+    now - cameraStartedAt > 2500
+  ) {
+    noHandHintShown = true
+    hud.toast('Le suivi est prêt, mais ne détecte pas encore de main. Placez la main entière au centre, paume vers la caméra et dans une bonne lumière.', 'info', 9000)
+  }
 
   if (!ready || !scene) {
     camera.draw(hands, (id) => fsm.roleOf(id), now)

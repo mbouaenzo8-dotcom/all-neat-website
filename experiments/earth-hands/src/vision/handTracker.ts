@@ -104,8 +104,9 @@ export class HandTracker {
       selfieMode: false, // le miroir est géré par mirrorLandmarks()
       maxNumHands: this.options.maxNumHands,
       modelComplexity: this.options.modelComplexity,
-      minDetectionConfidence: 0.6,
-      minTrackingConfidence: 0.6,
+      // Seuils un peu plus souples pour les webcams peu éclairées et les mains foncées.
+      minDetectionConfidence: 0.45,
+      minTrackingConfidence: 0.45,
     })
     this.hands.onResults((results) => {
       this.handleResults(results as MediaPipeResults)
