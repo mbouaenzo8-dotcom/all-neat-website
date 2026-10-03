@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Terre 3D — pilotée à la main (webcam)</title>
+    <meta
+      name="description"
+      content="Simulation 3D de la Terre en temps réel, pilotée par les gestes de la main devant la webcam : pincez pour tourner, pincez à deux mains pour zoomer. Tout se passe dans le navigateur, aucune image n'est envoyée."
+    />
+    <meta name="theme-color" content="#04060f" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <style>
+      /* Amorce de style : évite un flash blanc avant le chargement du CSS. */
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #04060f;
+        color: #e7eefc;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <noscript>
+      <p style="font-family: system-ui, sans-serif; padding: 2rem">
+        Cette simulation 3D nécessite JavaScript (et WebGL) pour s'exécuter dans votre navigateur.
+      </p>
+    </noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

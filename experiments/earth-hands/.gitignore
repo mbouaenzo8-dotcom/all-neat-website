@@ -1,0 +1,6 @@
+# Dépendances et sorties de build (déjà ignorées par la racine, rappel local)
+node_modules/
+dist/
+
+# Fichier d'état incrémental de `tsc -b`
+*.tsbuildinfo
